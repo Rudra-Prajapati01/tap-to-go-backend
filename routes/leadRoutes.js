@@ -1,15 +1,10 @@
 import express from "express";
 
-import {
-  createLead,
-} from "../controllers/leadController.js";
-
 import Lead from "../models/Lead.js";
 
 const router = express.Router();
 
-
-// CREATE LEAD
+/* CREATE */
 router.post(
   "/",
   async (req, res) => {
@@ -17,7 +12,9 @@ router.post(
     try {
 
       const lead =
-        await Lead.create(req.body);
+        await Lead.create(
+          req.body
+        );
 
       res.status(201).json({
         success: true,
@@ -29,14 +26,82 @@ router.post(
       console.log(error);
 
       res.status(500).json({
-        message: error.message,
+        message:
+          error.message,
       });
     }
   }
 );
 
+/* UPDATE */
+router.put(
+  "/update/:id",
 
-// GET LEADS
+  async (req, res) => {
+
+    try {
+
+      const updatedLead =
+        await Lead.findByIdAndUpdate(
+
+          req.params.id,
+
+          req.body,
+
+          {
+            new: true,
+          }
+        );
+
+      res.json({
+        success: true,
+        updatedLead,
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+
+        message:
+          "Update Failed",
+      });
+    }
+  }
+);
+
+/* DELETE */
+router.delete(
+  "/delete/:id",
+
+  async (req, res) => {
+
+    try {
+
+      await Lead.findByIdAndDelete(
+
+        req.params.id
+      );
+
+      res.json({
+        success: true,
+      });
+
+    } catch (error) {
+
+      console.log(error);
+
+      res.status(500).json({
+
+        message:
+          "Delete Failed",
+      });
+    }
+  }
+);
+
+/* GET LEADS */
 router.get(
   "/:ownerId",
 
