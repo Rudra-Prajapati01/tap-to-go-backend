@@ -9,6 +9,8 @@ import authRoutes from "./routes/authRoutes.js";
 import uploadRoutes from "./routes/uploadRoutes.js";
 import leadRoutes from "./routes/leadRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
+import analyticsRoutes
+from "./routes/analyticsRoutes.js";
 
 dotenv.config();
 
@@ -43,6 +45,13 @@ app.use(
   "/api/products",
   productRoutes
 );
+
+app.use(
+  "/api/analytics",
+  analyticsRoutes
+);
+
+
 
 app.get("/", (req, res) => {
 

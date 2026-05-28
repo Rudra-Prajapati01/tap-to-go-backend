@@ -1,5 +1,8 @@
 import Lead from "../models/Lead.js";
 
+import Analytics
+  from "../models/Analytics.js";
+
 /* ───────────────────────────── */
 /* CREATE LEAD */
 /* ───────────────────────────── */
@@ -9,10 +12,48 @@ export const createLead =
 
     try {
 
+      console.log(
+        "LEAD BODY:",
+        req.body
+      );
+
       const lead =
         await Lead.create(
           req.body
         );
+
+      console.log(
+        "LEAD CREATED"
+      );
+
+      /* ANALYTICS */
+
+      if (req.body.owner) {
+
+        await Analytics.findOneAndUpdate(
+
+          {
+            userId:
+              req.body.owner,
+          },
+
+          {
+            $inc: {
+
+              leads: 1,
+            },
+          },
+
+          {
+            upsert: true,
+            new: true,
+          }
+        );
+
+        console.log(
+          "ANALYTICS UPDATED"
+        );
+      }
 
       res.status(201).json(
         lead
@@ -20,9 +61,13 @@ export const createLead =
 
     } catch (error) {
 
-      console.log(error);
+      console.log(
+        "LEAD ERROR:",
+        error
+      );
 
       res.status(500).json({
+
         message:
           error.message,
       });
