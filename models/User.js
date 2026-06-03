@@ -180,7 +180,6 @@ const userSchema = new mongoose.Schema(
     },
 
     // ✅ LEAD FIELDS
-    // ✅ LEAD FORM SETTINGS
     leadCapture: {
 
       enabled: {
@@ -216,6 +215,48 @@ const userSchema = new mongoose.Schema(
         },
       },
     },
+
+    // ROLE
+
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
+    },
+
+    // PROFILE STATUS
+
+    profileStatus: {
+      type: String,
+      enum: ["active", "disabled"],
+      default: "active",
+    },
+
+    // NFC CARD
+
+    cardUID: {
+      type: String,
+      default: "",
+    },
+
+    cardStatus: {
+      type: String,
+      enum: ["active", "inactive"],
+      default: "inactive",
+    },
+
+    // CARD TYPE
+
+    cardType: {
+      type: String,
+      enum: [
+        "light",
+        "custom",
+        "google-review",
+      ],
+      default: "light",
+    },
+    
     // THEME SETTINGS
     theme: {
       profileTheme: {

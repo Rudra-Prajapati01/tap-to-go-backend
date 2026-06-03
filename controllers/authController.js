@@ -6,7 +6,6 @@ import jwt from "jsonwebtoken";
 
 import { nanoid } from "nanoid";
 
-import { useEffect } from "react";
 
 // REGISTER
 export const registerUser = async (
@@ -236,23 +235,62 @@ export const googleLogin = async (
   }
 };
 
-// UPDATE PROFILE
 export const updateProfile =
   async (req, res) => {
 
     try {
 
+      console.log("========== UPDATE PROFILE ==========");
+      console.log("PROFILE IMAGE FROM FRONTEND:");
+      console.log(req.body.profileImage);
+
+      console.log("COVER IMAGE FROM FRONTEND:");
+      console.log(req.body.coverImage);
+
+      console.log("LOGO IMAGE FROM FRONTEND:");
+      console.log(req.body.logoImage);
+
+      const existingUser =
+        await User.findById(
+          req.params.id
+        );
+
+      if (!existingUser) {
+
+        return res.status(404).json({
+          message: "User not found",
+        });
+
+      }
+
+      const updateData = {
+        ...req.body,
+      };
+
       const updatedUser =
         await User.findByIdAndUpdate(
-
           req.params.id,
-
-          req.body,
-
+          updateData,
           {
             new: true,
           }
         );
+
+      console.log("========== UPDATED USER ==========");
+      console.log(
+        "PROFILE:",
+        updatedUser.profileImage
+      );
+
+      console.log(
+        "COVER:",
+        updatedUser.coverImage
+      );
+
+      console.log(
+        "LOGO:",
+        updatedUser.logoImage
+      );
 
       res.status(200).json(
         updatedUser
@@ -261,11 +299,42 @@ export const updateProfile =
     } catch (error) {
 
       res.status(500).json({
-
         message:
           error.message,
-
       });
 
     }
+
   };
+
+export const getUserById = async (
+  req,
+  res
+) => {
+
+  try {
+
+    const user =
+      await User.findById(
+        req.params.id
+      );
+
+    if (!user) {
+
+      return res.status(404).json({
+        message: "User not found",
+      });
+
+    }
+
+    res.status(200).json(user);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+
+};

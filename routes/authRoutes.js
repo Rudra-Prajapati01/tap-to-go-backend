@@ -10,6 +10,8 @@ import {
 
   updateProfile,
 
+  getUserById,
+
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -30,6 +32,12 @@ router.post(
 router.post(
   "/google-login",
   googleLogin
+);
+
+// GET USER BY ID
+router.get(
+  "/user/:id",
+  getUserById
 );
 
 // UPDATE PROFILE
