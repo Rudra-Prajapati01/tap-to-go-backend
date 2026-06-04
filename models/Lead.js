@@ -22,7 +22,22 @@ const leadSchema = new mongoose.Schema(
       default: "",
     },
 
+    secondaryPhone: {
+      type: String,
+      default: "",
+    },
+
     company: {
+      type: String,
+      default: "",
+    },
+
+    website: {
+      type: String,
+      default: "",
+    },
+
+    address: {
       type: String,
       default: "",
     },
@@ -32,7 +47,6 @@ const leadSchema = new mongoose.Schema(
       default: "",
     },
   },
-
   {
     timestamps: true,
   }
