@@ -261,7 +261,7 @@ const userSchema = new mongoose.Schema(
     theme: {
       profileTheme: {
         type: String,
-        default: "#7c3aed",
+        default: "#0B4DBB",
       },
 
       backgroundColor: {
@@ -276,7 +276,7 @@ const userSchema = new mongoose.Schema(
 
       buttonColor: {
         type: String,
-        default: "#7c3aed",
+        default: "#0B4DBB",
       },
 
       buttonTextColor: {
