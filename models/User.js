@@ -35,6 +35,21 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
 
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+
+    verificationOTP: {
+      type: String,
+      default: null,
+    },
+
+    verificationOTPExpiry: {
+      type: Date,
+      default: null,
+    },
+
     // UNIQUE PUBLIC ID
     uniqueId: {
       type: String,
