@@ -25,6 +25,16 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
+    resetOTP: {
+      type: String,
+      default: null,
+    },
+
+    resetOTPExpiry: {
+      type: Date,
+      default: null,
+    },
+
     // UNIQUE PUBLIC ID
     uniqueId: {
       type: String,
@@ -256,7 +266,7 @@ const userSchema = new mongoose.Schema(
       ],
       default: "light",
     },
-    
+
     // THEME SETTINGS
     theme: {
       profileTheme: {

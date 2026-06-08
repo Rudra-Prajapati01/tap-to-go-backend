@@ -6,6 +6,9 @@ import jwt from "jsonwebtoken";
 
 import { nanoid } from "nanoid";
 
+import nodemailer from "nodemailer";
+
+
 
 // REGISTER
 export const registerUser = async (
@@ -337,4 +340,288 @@ export const getUserById = async (
 
   }
 
+};
+
+export const sendResetOTP = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Email not found",
+      });
+    }
+
+    const otp = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
+    user.resetOTP = otp;
+    user.resetOTPExpiry =
+      Date.now() + 10 * 60 * 1000;
+
+    await user.save();
+
+    const transporter =
+      nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "JioTap Password Reset OTP",
+      html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+      <meta charset="UTF-8">
+      </head>
+
+      <body style="
+      margin:0;
+      padding:0;
+      background:#f4f7fb;
+      font-family:Arial,sans-serif;
+      ">
+
+      <div style="
+      max-width:600px;
+      margin:40px auto;
+      background:#ffffff;
+      border-radius:20px;
+      overflow:hidden;
+      box-shadow:0 10px 30px rgba(0,0,0,0.08);
+      ">
+
+      <!-- Header -->
+      <div style="
+      background:linear-gradient(135deg,#0B4DBB 0%,#4CAF1D 100%);
+      padding:35px;
+      text-align:center;
+      ">
+
+      <h1 style="
+      margin:0;
+      color:white;
+      font-size:30px;
+      ">
+      JioTap
+      </h1>
+
+      <p style="
+      margin-top:10px;
+      color:white;
+      font-size:15px;
+      ">
+      Smart NFC Business Cards
+      </p>
+
+      </div>
+
+      <!-- Content -->
+      <div style="padding:40px;">
+
+      <h2 style="
+      color:#111827;
+      margin-top:0;
+      ">
+      Password Reset Request
+      </h2>
+
+      <p style="
+      font-size:15px;
+      color:#555;
+      line-height:1.7;
+      ">
+      We received a request to reset your JioTap account password.
+      Use the verification code below:
+      </p>
+
+      <div style="
+      margin:30px auto;
+      background:#F4F8FF;
+      border:2px dashed #0B4DBB;
+      border-radius:16px;
+      padding:20px;
+      text-align:center;
+      ">
+
+      <div style="
+      font-size:42px;
+      font-weight:700;
+      letter-spacing:8px;
+      color:#0B4DBB;
+      ">
+      ${otp}
+      </div>
+
+      </div>
+
+      <p style="
+      font-size:15px;
+      color:#666;
+      ">
+      ⏰ This OTP will expire in
+      <strong>10 minutes</strong>.
+      </p>
+
+      <p style="
+      font-size:15px;
+      color:#666;
+      line-height:1.6;
+      ">
+      If you did not request a password reset,
+      you can safely ignore this email.
+      </p>
+
+      </div>
+
+      <!-- Footer -->
+      <div style="
+      background:#F9FAFB;
+      padding:25px;
+      text-align:center;
+      border-top:1px solid #eee;
+      ">
+
+      <p style="
+      margin:0;
+      color:#777;
+      font-size:13px;
+      ">
+      © 2026 JioTap. All rights reserved.
+      </p>
+
+      <p style="
+      margin-top:8px;
+      color:#999;
+      font-size:12px;
+      ">
+      Secure • Fast • Smart Networking
+      </p>
+
+      </div>
+
+      </div>
+
+      </body>
+      </html>
+      `,
+    });
+
+    res.json({
+      message: "OTP sent successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const verifyResetOTP = async (
+  req,
+  res
+) => {
+  try {
+    const { email, otp } = req.body;
+
+    const user =
+      await User.findOne({
+        email,
+      });
+
+    if (
+      !user ||
+      user.resetOTP !== otp
+    ) {
+      return res.status(400).json({
+        message: "Invalid OTP",
+      });
+    }
+
+    if (
+      user.resetOTPExpiry <
+      Date.now()
+    ) {
+      return res.status(400).json({
+        message: "OTP expired",
+      });
+    }
+
+    res.json({
+      message: "OTP verified",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
+export const resetPassword = async (
+  req,
+  res
+) => {
+  try {
+    const {
+      email,
+      otp,
+      password,
+    } = req.body;
+
+    const user =
+      await User.findOne({
+        email,
+      });
+
+    if (
+      !user ||
+      user.resetOTP !== otp
+    ) {
+      return res.status(400).json({
+        message: "Invalid OTP",
+      });
+    }
+
+    if (
+      user.resetOTPExpiry <
+      Date.now()
+    ) {
+      return res.status(400).json({
+        message: "OTP expired",
+      });
+    }
+
+    const hashedPassword =
+      await bcrypt.hash(
+        password,
+        10
+      );
+
+    user.password =
+      hashedPassword;
+
+    user.resetOTP = null;
+    user.resetOTPExpiry = null;
+
+    await user.save();
+
+    res.json({
+      message:
+        "Password updated successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
 };

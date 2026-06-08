@@ -1,17 +1,14 @@
 import express from "express";
 
 import {
-
   registerUser,
-
   loginUser,
-
   googleLogin,
-
   updateProfile,
-
   getUserById,
-
+  sendResetOTP,
+  verifyResetOTP,
+  resetPassword,
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -45,5 +42,21 @@ router.put(
   "/update-profile/:id",
   updateProfile
 );
+
+router.post(
+  "/forgot-password",
+  sendResetOTP
+);
+
+router.post(
+  "/verify-otp",
+  verifyResetOTP
+);
+
+router.post(
+  "/reset-password",
+  resetPassword
+);
+
 
 export default router;
