@@ -119,6 +119,7 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
 
+
     // COMPANY INFO
     companyName: {
       type: String,
@@ -211,6 +212,9 @@ const userSchema = new mongoose.Schema(
         type: Boolean,
         default: true,
       },
+
+
+
 
       fields: {
 
@@ -319,6 +323,72 @@ const userSchema = new mongoose.Schema(
         default: "left",
       },
     },
+
+    googleBusiness: {
+      placeId: {
+        type: String,
+        default: "",
+      },
+
+      businessName: {
+        type: String,
+        default: "",
+      },
+
+      rating: {
+        type: Number,
+        default: 0,
+      },
+
+      totalReviews: {
+        type: Number,
+        default: 0,
+      },
+    },
+
+    youtubeVideos: [
+      {
+        title: {
+          type: String,
+          default: ""
+        },
+
+        url: {
+          type: String,
+          required: true
+        },
+
+        videoId: {
+          type: String,
+          default: ""
+        },
+
+        thumbnail: {
+          type: String,
+          default: ""
+        },
+
+        featured: {
+          type: Boolean,
+          default: false
+        },
+
+        views: {
+          type: Number,
+          default: 0
+        },
+
+        sortOrder: {
+          type: Number,
+          default: 0
+        },
+
+        createdAt: {
+          type: Date,
+          default: Date.now
+        }
+      }
+    ]
   },
 
   {
