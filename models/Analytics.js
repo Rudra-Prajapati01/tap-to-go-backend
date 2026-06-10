@@ -110,6 +110,40 @@ const analyticsSchema =
                     },
                 },
             ],
+
+
+            dailyStats: [
+                {
+                    date: {
+                        type: String,
+                    },
+
+                    profileViews: {
+                        type: Number,
+                        default: 0,
+                    },
+
+                    linkClicks: {
+                        type: Number,
+                        default: 0,
+                    },
+
+                    nfcTaps: {
+                        type: Number,
+                        default: 0,
+                    },
+
+                    qrScans: {
+                        type: Number,
+                        default: 0,
+                    },
+
+                    leads: {
+                        type: Number,
+                        default: 0,
+                    },
+                },
+            ],
         },
 
         {

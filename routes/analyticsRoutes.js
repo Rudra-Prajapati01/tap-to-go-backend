@@ -1,11 +1,36 @@
 import express from "express";
 
 import Analytics
-from "../models/Analytics.js";
+  from "../models/Analytics.js";
 
 const router =
   express.Router();
 
+
+const updateDailyStats = (analytics, field) => {
+  const today = new Date().toISOString().split("T")[0];
+
+  let day = analytics.dailyStats.find(
+    (d) => d.date === today
+  );
+
+  if (!day) {
+    analytics.dailyStats.push({
+      date: today,
+      profileViews: 0,
+      linkClicks: 0,
+      nfcTaps: 0,
+      qrScans: 0,
+      leads: 0,
+    });
+
+    day = analytics.dailyStats[
+      analytics.dailyStats.length - 1
+    ];
+  }
+
+  day[field] += 1;
+};
 /* ───────────────────────────── */
 /* GET ANALYTICS */
 /* ───────────────────────────── */
@@ -66,26 +91,24 @@ router.post(
         "PROFILE VIEW:",
         req.body
       );
+      let analytics = await Analytics.findOne({
+        userId: req.body.userId.toString(),
+      });
 
-      await Analytics.findOneAndUpdate(
+      if (!analytics) {
+        analytics = await Analytics.create({
+          userId: req.body.userId,
+        });
+      }
 
-        {
-          userId:
-            req.body.userId.toString(),
-        },
+      analytics.profileViews += 1;
 
-        {
-          $inc: {
-
-            profileViews: 1,
-          },
-        },
-
-        {
-          upsert: true,
-          new: true,
-        }
+      updateDailyStats(
+        analytics,
+        "profileViews"
       );
+
+      await analytics.save();
 
       res.json({
 
@@ -126,25 +149,24 @@ router.post(
         platform,
       } = req.body;
 
-      await Analytics.findOneAndUpdate(
+      let analytics = await Analytics.findOne({
+        userId: userId.toString(),
+      });
 
-        {
-          userId:
-            userId.toString(),
-        },
+      if (!analytics) {
+        analytics = await Analytics.create({
+          userId,
+        });
+      }
 
-        {
-          $inc: {
+      analytics.linkClicks[platform] += 1;
 
-            [`linkClicks.${platform}`]: 1,
-          },
-        },
-
-        {
-          upsert: true,
-          new: true,
-        }
+      updateDailyStats(
+        analytics,
+        "linkClicks"
       );
+
+      await analytics.save();
 
       res.json({
 
@@ -180,25 +202,24 @@ router.post(
         req.body
       );
 
-      await Analytics.findOneAndUpdate(
+      let analytics = await Analytics.findOne({
+        userId: req.body.userId.toString(),
+      });
 
-        {
-          userId:
-            req.body.userId.toString(),
-        },
+      if (!analytics) {
+        analytics = await Analytics.create({
+          userId: req.body.userId,
+        });
+      }
 
-        {
-          $inc: {
+      analytics.nfcTaps += 1;
 
-            nfcTaps: 1,
-          },
-        },
-
-        {
-          upsert: true,
-          new: true,
-        }
+      updateDailyStats(
+        analytics,
+        "nfcTaps"
       );
+
+      await analytics.save();
 
       res.json({
 
@@ -234,25 +255,24 @@ router.post(
         req.body
       );
 
-      await Analytics.findOneAndUpdate(
+      let analytics = await Analytics.findOne({
+        userId: req.body.userId.toString(),
+      });
 
-        {
-          userId:
-            req.body.userId.toString(),
-        },
+      if (!analytics) {
+        analytics = await Analytics.create({
+          userId: req.body.userId,
+        });
+      }
 
-        {
-          $inc: {
+      analytics.qrScans += 1;
 
-            qrScans: 1,
-          },
-        },
-
-        {
-          upsert: true,
-          new: true,
-        }
+      updateDailyStats(
+        analytics,
+        "qrScans"
       );
+
+      await analytics.save();
 
       res.json({
 
