@@ -11,6 +11,9 @@ import {
   deactivateCard,
   getAllLeads,
   updateUserByAdmin,
+  forgotPassword,
+  verifyOTP,
+  resetPassword,
 } from "../controllers/adminController.js";
 
 const router =
@@ -69,6 +72,21 @@ router.put(
 router.put(
   "/deactivate/:id",
   deactivateCard
+);
+
+router.post(
+  "/forgot-password",
+  forgotPassword
+);
+
+router.post(
+  "/verify-otp",
+  verifyOTP
+);
+
+router.post(
+  "/reset-password",
+  resetPassword
 );
 
 /* ==========================

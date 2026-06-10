@@ -5,7 +5,7 @@ import Analytics from "../models/Analytics.js";
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
+import nodemailer from "nodemailer";
 /* ==========================================
    ADMIN LOGIN
 ========================================== */
@@ -513,5 +513,103 @@ export const updateUserByAdmin = async (req, res) => {
       message: error.message,
     });
 
+  }
+};
+
+/* ==========================================
+   FORGOT PASSWORD - Send OTP
+========================================== */
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const admin = await User.findOne({ email, role: "admin" });
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: "Admin not found" });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Store in DB
+    admin.resetOTP = otp;
+    admin.resetOTPExpiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+    await admin.save();
+
+    const transporter =
+      nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: admin.email,
+      subject: "JioTap Admin Password Reset OTP",
+      html: `
+    <h2>Admin Password Reset</h2>
+    <p>Your OTP is:</p>
+    <h1>${otp}</h1>
+    <p>Valid for 10 minutes.</p>
+  `,
+    });
+
+    res.json({ success: true, message: "OTP sent to your email" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/* ==========================================
+   VERIFY OTP
+========================================== */
+export const verifyOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+    const admin = await User.findOne({ email, role: "admin" });
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: "Admin not found" });
+    }
+
+    if (admin.resetOTP !== otp) {
+      return res.status(400).json({ success: false, message: "Invalid OTP" });
+    }
+
+    if (admin.resetOTPExpiry < Date.now()) {
+      return res.status(400).json({ success: false, message: "OTP Expired" });
+    }
+
+    res.json({ success: true, message: "OTP verified successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/* ==========================================
+   RESET PASSWORD
+========================================== */
+export const resetPassword = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const admin = await User.findOne({ email, role: "admin" });
+
+    if (!admin) {
+      return res.status(404).json({ success: false, message: "Admin not found" });
+    }
+
+    // Hash the new password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    admin.password = hashedPassword;
+    admin.resetOTP = null;         // Clear OTP after successful reset
+    admin.resetOTPExpiry = null;   // Clear Expiry
+    await admin.save();
+
+    res.json({ success: true, message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
   }
 };
