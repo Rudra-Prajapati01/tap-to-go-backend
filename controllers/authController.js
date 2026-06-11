@@ -11,11 +11,7 @@ import nodemailer from "nodemailer";
 
 
 // REGISTER
-export const registerUser = async (
-  req,
-  res
-) => {
-
+export const registerUser = async (req, res) => {
   try {
 
     const {
@@ -25,7 +21,6 @@ export const registerUser = async (
       password,
     } = req.body;
 
-    // CHECK USER
     const userExists =
       await User.findOne({
         $or: [
@@ -35,54 +30,59 @@ export const registerUser = async (
       });
 
     if (userExists) {
-
       return res.status(400).json({
-        message:
-          "User already exists",
+        message: "User already exists",
       });
-
     }
 
-    // HASH PASSWORD
     const hashedPassword =
       await bcrypt.hash(password, 10);
 
-    // UNIQUE ID
     const uniqueId =
       "tap_" + nanoid(8);
 
-    // CREATE USER
+    const otp = Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
+
     const user = await User.create({
-
       name,
-
       username,
-
       email,
-
       password: hashedPassword,
-
       uniqueId,
 
+      isVerified: false,
+      verificationOTP: otp,
+      verificationOTPExpiry:
+        Date.now() + 10 * 60 * 1000,
     });
 
-    // TOKEN
-    const token = jwt.sign(
-      {
-        id: user._id,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
+    const transporter =
+      nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Verify Your JioTap Account",
+      html: `
+        <h2>Welcome to JioTap</h2>
+        <p>Your verification OTP is:</p>
+        <h1>${otp}</h1>
+        <p>This OTP expires in 10 minutes.</p>
+      `,
+    });
 
     res.status(201).json({
-
-      token,
-
-      user,
-
+      success: true,
+      message: "OTP sent successfully",
+      email,
     });
 
   } catch (error) {
@@ -127,6 +127,13 @@ export const loginUser = async (
         password,
         user.password
       );
+
+    if (!user.isVerified) {
+      return res.status(401).json({
+        message:
+          "Please verify your email first",
+      });
+    }
 
     if (!isMatch) {
 
@@ -625,3 +632,58 @@ export const resetPassword = async (
     });
   }
 };
+
+export const verifyRegistrationOTP =
+  async (req, res) => {
+
+    try {
+
+      const { email, otp } = req.body;
+
+      const user =
+        await User.findOne({ email });
+
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+
+      if (
+        user.verificationOTP !== otp
+      ) {
+        return res.status(400).json({
+          message: "Invalid OTP",
+        });
+      }
+
+      if (
+        user.verificationOTPExpiry <
+        Date.now()
+      ) {
+        return res.status(400).json({
+          message: "OTP expired",
+        });
+      }
+
+      user.isVerified = true;
+      user.verificationOTP = null;
+      user.verificationOTPExpiry = null;
+
+      await user.save();
+
+      res.json({
+        success: true,
+        message:
+          "Email verified successfully",
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: error.message,
+      });
+
+    }
+  };
+  

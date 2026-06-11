@@ -9,6 +9,7 @@ import {
   sendResetOTP,
   verifyResetOTP,
   resetPassword,
+  verifyRegistrationOTP,
 } from "../controllers/authController.js";
 
 const router = express.Router();
@@ -51,6 +52,11 @@ router.post(
 router.post(
   "/verify-otp",
   verifyResetOTP
+);
+
+router.post(
+  "/verify-registration-otp",
+  verifyRegistrationOTP
 );
 
 router.post(

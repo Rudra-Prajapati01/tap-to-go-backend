@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import helmet from "helmet";
 
 import connectDB from "./config/db.js";
 
@@ -13,25 +14,66 @@ import analyticsRoutes from "./routes/analyticsRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 
-
-
 dotenv.config();
 
-// TEST LOGS
-console.log("TEST_VAR =", process.env.TEST_VAR);
-console.log("Cloud =", process.env.CLOUDINARY_CLOUD_NAME);
-console.log("API =", process.env.CLOUDINARY_API_KEY);
-console.log("Secret =", process.env.CLOUDINARY_API_SECRET);
+// Production Safe Log
+console.log("🚀 JioTap Server Starting...");
 
 connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+/* ========================================
+   SECURITY HEADERS
+======================================== */
 
-// Routes
+app.use(helmet());
+
+app.use(
+  helmet.hsts({
+    maxAge: 31536000, // 1 Year
+    includeSubDomains: true,
+    preload: true,
+  })
+);
+
+app.use(
+  helmet.referrerPolicy({
+    policy: "strict-origin-when-cross-origin",
+  })
+);
+
+// Extra Security Headers
+app.use((req, res, next) => {
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+
+  res.setHeader(
+    "Permissions-Policy",
+    "camera=(), microphone=(), geolocation=()"
+  );
+
+  next();
+});
+
+/* ========================================
+   MIDDLEWARE
+======================================== */
+
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+/* ========================================
+   ROUTES
+======================================== */
+
 app.use("/api/auth", authRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/users", userRoutes);
@@ -39,16 +81,44 @@ app.use("/api/upload", uploadRoutes);
 app.use("/api/leads", leadRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/analytics", analyticsRoutes);
-app.use(
-  "/api/contacts",
-  contactRoutes
-);
-// Test Route
+app.use("/api/contacts", contactRoutes);
+
+/* ========================================
+   TEST ROUTE
+======================================== */
+
 app.get("/", (req, res) => {
   res.send("JioTap API Running...");
 });
 
-// Start Server
+/* ========================================
+   404 HANDLER
+======================================== */
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: "Route Not Found",
+  });
+});
+
+/* ========================================
+   ERROR HANDLER
+======================================== */
+
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  res.status(500).json({
+    success: false,
+    message: "Internal Server Error",
+  });
+});
+
+/* ========================================
+   START SERVER
+======================================== */
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
