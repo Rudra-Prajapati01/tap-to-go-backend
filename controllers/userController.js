@@ -1,4 +1,7 @@
 import User from "../models/User.js";
+import Product from "../models/Product.js";
+import Lead from "../models/Lead.js";
+import Analytics from "../models/Analytics.js";
 
 export const getPublicUser =
   async (req, res) => {
@@ -27,3 +30,43 @@ export const getPublicUser =
       });
     }
   };
+
+
+
+export const deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    // Delete Products
+    await Product.deleteMany({
+      userId: userId,
+    });
+
+    // Delete Leads
+    await Lead.deleteMany({
+      owner: userId,
+    });
+
+    // Delete Analytics
+    await Analytics.deleteMany({
+      userId: userId,
+    });
+
+    // Delete User
+    await User.findByIdAndDelete(userId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Account deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete Account Error:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete account",
+    });
+  }
+};
+
+
