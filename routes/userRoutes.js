@@ -9,6 +9,13 @@ import authMiddleware from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+router.get("/test-route", (req, res) => {
+  res.json({
+    success: true,
+    message: "NEW ROUTE WORKING",
+  });
+});
+
 router.delete(
   "/delete-account",
   authMiddleware,
