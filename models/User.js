@@ -35,6 +35,17 @@ const userSchema = new mongoose.Schema(
       default: null,
     },
 
+    deleteOTP: {
+      type: String,
+      default: null,
+    },
+
+    deleteOTPExpiry: {
+      type: Date,
+      default: null,
+    },
+
+
     isVerified: {
       type: Boolean,
       default: false,

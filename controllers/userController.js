@@ -35,38 +35,40 @@ export const getPublicUser =
 
 export const deleteAccount = async (req, res) => {
   try {
-    const userId = req.user.id;
+    console.log("DELETE ACCOUNT HIT");
 
-    // Delete Products
+    const userId = req.user._id;
+
     await Product.deleteMany({
       userId: userId,
     });
 
-    // Delete Leads
     await Lead.deleteMany({
       owner: userId,
     });
 
-    // Delete Analytics
     await Analytics.deleteMany({
       userId: userId,
     });
 
-    // Delete User
     await User.findByIdAndDelete(userId);
 
     return res.status(200).json({
       success: true,
       message: "Account deleted successfully",
     });
+
   } catch (error) {
-    console.error("Delete Account Error:", error);
+
+    console.error(
+      "Delete Account Error:",
+      error
+    );
 
     return res.status(500).json({
       success: false,
-      message: "Failed to delete account",
+      message: error.message,
     });
   }
 };
-
 
