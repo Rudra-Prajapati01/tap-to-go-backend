@@ -134,4 +134,57 @@ router.post(
   }
 );
 
+router.post(
+  "/gallery",
+  upload.array("images", 20),
+  async (req, res) => {
+    try {
+
+      const uploadedImages = [];
+
+      for (const file of req.files) {
+
+        const result = await new Promise(
+          (resolve, reject) => {
+
+            const stream =
+              cloudinary.uploader.upload_stream(
+                {
+                  folder: "tap-to-go/gallery",
+                },
+                (error, result) => {
+
+                  if (error) reject(error);
+                  else resolve(result);
+
+                }
+              );
+
+            streamifier
+              .createReadStream(file.buffer)
+              .pipe(stream);
+          }
+        );
+
+        uploadedImages.push({
+          url: result.secure_url,
+          publicId: result.public_id,
+        });
+      }
+
+      return res.json({
+        success: true,
+        images: uploadedImages,
+      });
+
+    } catch (error) {
+
+      return res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  }
+);
+
 export default router;

@@ -399,7 +399,30 @@ const userSchema = new mongoose.Schema(
           default: Date.now
         }
       }
-    ]
+    ],
+
+    gallery: [
+      {
+        url: String,
+
+        publicId: String,
+
+        title: {
+          type: String,
+          default: "",
+        },
+
+        description: {
+          type: String,
+          default: "",
+        },
+
+        uploadedAt: {
+          type: Date,
+          default: Date.now,
+        },
+      },
+    ],
   },
 
   {
