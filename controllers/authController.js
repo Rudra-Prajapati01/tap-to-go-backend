@@ -195,14 +195,10 @@ export const googleLogin = async (
     if (!user) {
 
       user = await User.create({
-
         name,
-
         username:
           email.split("@")[0] +
-          Math.floor(
-            Math.random() * 1000
-          ),
+          Math.floor(Math.random() * 1000),
 
         email,
 
@@ -210,9 +206,9 @@ export const googleLogin = async (
 
         profileImage,
 
-        uniqueId:
-          "tap_" + nanoid(8),
+        uniqueId: "tap_" + nanoid(8),
 
+        isVerified: true,
       });
 
     }
@@ -686,4 +682,3 @@ export const verifyRegistrationOTP =
 
     }
   };
-  

@@ -423,6 +423,72 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+    professionalBio: {
+      goals: {
+        type: String,
+        default: "",
+      },
+
+      accomplishments: {
+        type: String,
+        default: "",
+      },
+
+      interests: {
+        type: String,
+        default: "",
+      },
+
+      networks: {
+        type: String,
+        default: "",
+      },
+
+      skills: {
+        type: String,
+        default: "",
+      },
+
+      yearsInBusiness: {
+        type: String,
+        default: "",
+      },
+
+      yearsInCity: {
+        type: String,
+        default: "",
+      },
+
+      previousJobs: {
+        type: String,
+        default: "",
+      },
+
+      hobbies: {
+        type: String,
+        default: "",
+      },
+
+      cityOfResidence: {
+        type: String,
+        default: "",
+      },
+
+      burningDesire: {
+        type: String,
+        default: "",
+      },
+
+      unknownFact: {
+        type: String,
+        default: "",
+      },
+
+      successKey: {
+        type: String,
+        default: "",
+      }
+    },
   },
 
   {
