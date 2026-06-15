@@ -440,8 +440,8 @@ const userSchema = new mongoose.Schema(
       },
 
       networks: {
-        type: String,
-        default: "",
+        type: [String],
+        default: [],
       },
 
       skills: {
