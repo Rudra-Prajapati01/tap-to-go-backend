@@ -439,6 +439,11 @@ const userSchema = new mongoose.Schema(
         default: "",
       },
 
+      networkDescription: {
+        type: String,
+        default: "",
+      },
+
       networks: {
         type: [String],
         default: [],
