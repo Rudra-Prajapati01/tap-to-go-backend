@@ -13,6 +13,8 @@ import productRoutes from "./routes/productRoutes.js";
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import hardwareOrderRoutes from "./routes/hardwareOrderRoutes.js";
 
 dotenv.config();
 
@@ -82,7 +84,8 @@ app.use("/api/leads", leadRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/contacts", contactRoutes);
-
+app.use("/api/orders", orderRoutes);
+app.use("/api/hardware-orders", hardwareOrderRoutes);
 /* ========================================
    TEST ROUTE
 ======================================== */

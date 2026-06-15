@@ -423,6 +423,8 @@ const userSchema = new mongoose.Schema(
         },
       },
     ],
+
+
     professionalBio: {
       goals: {
         type: String,
@@ -494,6 +496,12 @@ const userSchema = new mongoose.Schema(
         default: "",
       }
     },
+
+    professionalBioEnabled: {
+      type: Boolean,
+      default: false,
+    },
+
   },
 
   {
