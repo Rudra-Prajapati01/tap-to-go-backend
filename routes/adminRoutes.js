@@ -1,6 +1,5 @@
 import express from "express";
 
-
 import {
   adminLogin,
   getDashboardStats,
@@ -14,10 +13,15 @@ import {
   forgotPassword,
   verifyOTP,
   resetPassword,
+
+  // Orders
+  getAllOrders,
+  getOrderByIdAdmin,
+  updateOrderStatus,
+
 } from "../controllers/adminController.js";
 
-const router =
-  express.Router();
+const router = express.Router();
 
 /* ==========================
    ADMIN LOGIN
@@ -60,6 +64,7 @@ router.put(
   "/users/:id",
   updateUserByAdmin
 );
+
 /* ==========================
    CARD MANAGEMENT
 ========================== */
@@ -73,6 +78,10 @@ router.put(
   "/deactivate/:id",
   deactivateCard
 );
+
+/* ==========================
+   PASSWORD RESET
+========================== */
 
 router.post(
   "/forgot-password",
@@ -96,6 +105,25 @@ router.post(
 router.get(
   "/leads",
   getAllLeads
+);
+
+/* ==========================
+   ORDERS
+========================== */
+
+router.get(
+  "/orders",
+  getAllOrders
+);
+
+router.get(
+  "/orders/:id",
+  getOrderByIdAdmin
+);
+
+router.put(
+  "/orders/:id/status",
+  updateOrderStatus
 );
 
 export default router;
