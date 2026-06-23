@@ -27,7 +27,7 @@ export const createLead = async (req, res) => {
           },
         });
 
-        const profileUrl = `https://jiotap.com/u/${ownerUser.uniqueId}`;
+        const profileUrl = `https://easytap.co.in/u/${ownerUser.uniqueId}`;
 
         // 1. OWNER EMAIL (Premium Modern UI Design)
         await transporter.sendMail({
@@ -38,7 +38,7 @@ export const createLead = async (req, res) => {
             <div style="max-width:550px; margin:20px auto; background:#ffffff; border-radius:24px; overflow:hidden; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; box-shadow:0 12px 40px rgba(0,0,0,.08); border: 1px solid #e5e7eb;">
               
               <div style="background:#0B4DBB; padding:30px; text-align:center;">
-                <h1 style="color:white; margin:0; font-size:28px; font-weight:800; letter-spacing:0.5px;">JioTap</h1>
+                <h1 style="color:white; margin:0; font-size:28px; font-weight:800; letter-spacing:0.5px;">EasyTap</h1>
               </div>
               
               <div style="padding:30px; background:#ffffff;">
@@ -86,9 +86,9 @@ export const createLead = async (req, res) => {
               </div>
 
               <div style="background:#f9fafb; padding:20px; text-align:center; border-top:1px solid #f1f5f9;">
-                <p style="margin:0; color:#9ca3af; font-size:12px;">This is an automated notification from your JioTap account.</p>
+                <p style="margin:0; color:#9ca3af; font-size:12px;">This is an automated notification from your EasyTap account.</p>
                 <p style="margin:6px 0 0 0; font-size:12px;">
-                  <a href="https://jiotap.com" style="color:#0B4DBB; text-decoration:none; font-weight:600;">www.jiotap.com</a>
+                  <a href="https://easytap.co.in" style="color:#0B4DBB; text-decoration:none; font-weight:600;">www.easytap.co.in</a>
                 </p>
               </div>
             </div>
@@ -100,7 +100,7 @@ export const createLead = async (req, res) => {
           await transporter.sendMail({
             from: process.env.EMAIL_USER,
             to: lead.email,
-            subject: `🎉 You connected with ${ownerUser.name} on JioTap`,
+            subject: `🎉 You connected with ${ownerUser.name} on EasyTap`,
             html: `
             <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:28px; overflow:hidden; font-family:Arial,sans-serif; box-shadow:0 20px 50px rgba(0,0,0,.12);">
               
@@ -114,7 +114,7 @@ export const createLead = async (req, res) => {
               <div style="background:#ffffff; padding:25px 25px 0; text-align:center;">
                 <h1 style="margin:0; font-size:32px; font-weight:700; color:#111827;">You've made a new connection!</h1>
                 <p style="color:#6b7280; margin-top:12px; font-size:15px;">
-                  Thank you for connecting with <strong>${ownerUser.name}</strong> through JioTap.
+                  Thank you for connecting with <strong>${ownerUser.name}</strong> through EasyTap.
                 </p>
               </div>
 
@@ -140,9 +140,9 @@ export const createLead = async (req, res) => {
               </div>
 
               <div style="background:#f9fafb; padding:25px; text-align:center;">
-                <p style="margin:0; color:#6b7280; font-size:13px;">Powered by JioTap</p>
+                <p style="margin:0; color:#6b7280; font-size:13px;">Powered by EasyTap</p>
                 <p style="margin-top:10px;">
-                  <a href="https://jiotap.com" style="color:#0B4DBB; text-decoration:none; font-weight:600;">www.jiotap.com</a>
+                  <a href="https://easytap.co.in" style="color:#0B4DBB; text-decoration:none; font-weight:600;">www.easytap.co.in</a>
                 </p>
               </div>
             </div>

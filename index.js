@@ -19,7 +19,7 @@ import hardwareOrderRoutes from "./routes/hardwareOrderRoutes.js";
 dotenv.config();
 
 // Production Safe Log
-console.log("🚀 JioTap Server Starting...");
+console.log("🚀 EasyTap Server Starting...");
 
 connectDB();
 
@@ -91,7 +91,7 @@ app.use("/api/hardware-orders", hardwareOrderRoutes);
 ======================================== */
 
 app.get("/", (req, res) => {
-  res.send("JioTap API Running...");
+  res.send("EasyTap API Running...");
 });
 
 /* ========================================

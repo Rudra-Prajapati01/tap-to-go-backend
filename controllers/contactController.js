@@ -31,7 +31,7 @@ export const createContact = async (req, res) => {
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: "jiotapofficial@gmail.com",
+      to: "Easytapofficial@gmail.com",
       subject: "🚀 New Contact Form Submission",
 
       html: `
@@ -76,7 +76,7 @@ export const createContact = async (req, res) => {
                 opacity:0.9;
                 font-size:14px;
               ">
-                JioTap Contact Form Submission
+                EasyTap Contact Form Submission
               </p>
             </div>
 
@@ -132,7 +132,7 @@ export const createContact = async (req, res) => {
                 color:#6B7280;
                 font-size:13px;
               ">
-                Sent from JioTap Contact Form
+                Sent from EasyTap Contact Form
               </p>
 
               <p style="
@@ -140,7 +140,7 @@ export const createContact = async (req, res) => {
                 color:#9CA3AF;
                 font-size:12px;
               ">
-                © 2026 JioTap • Smart NFC Business Cards
+                © 2026 EasyTap • Smart NFC Business Cards
               </p>
 
             </div>

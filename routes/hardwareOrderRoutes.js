@@ -8,7 +8,6 @@ import {
 const router = express.Router();
 
 
-// CREATE RAZORPAY ORDER FOR A FIXED JIOTAP HARDWARE PRODUCT
 router.post(
   "/razorpay",
   createHardwareRazorpayOrder

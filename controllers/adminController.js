@@ -325,7 +325,7 @@ export const forgotPassword = async (req, res) => {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: admin.email,
-      subject: "JioTap Admin Password Reset OTP",
+      subject: "EasyTap Admin Password Reset OTP",
       html: `
         <h2>Admin Password Reset</h2>
         <p>Your OTP is:</p>

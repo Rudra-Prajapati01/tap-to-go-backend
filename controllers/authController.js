@@ -70,9 +70,9 @@ export const registerUser = async (req, res) => {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "Verify Your JioTap Account",
+      subject: "Verify Your EasyTap Account",
       html: `
-        <h2>Welcome to JioTap</h2>
+        <h2>Welcome to EasyTap</h2>
         <p>Your verification OTP is:</p>
         <h1>${otp}</h1>
         <p>This OTP expires in 10 minutes.</p>
@@ -379,7 +379,7 @@ export const sendResetOTP = async (req, res) => {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "JioTap Password Reset OTP",
+      subject: "EasyTap Password Reset OTP",
       html: `
       <!DOCTYPE html>
       <html>
@@ -415,7 +415,7 @@ export const sendResetOTP = async (req, res) => {
       color:white;
       font-size:30px;
       ">
-      JioTap
+      EasyTap
       </h1>
 
       <p style="
@@ -443,7 +443,7 @@ export const sendResetOTP = async (req, res) => {
       color:#555;
       line-height:1.7;
       ">
-      We received a request to reset your JioTap account password.
+      We received a request to reset your EasyTap account password.
       Use the verification code below:
       </p>
 
@@ -499,7 +499,7 @@ export const sendResetOTP = async (req, res) => {
       color:#777;
       font-size:13px;
       ">
-      © 2026 JioTap. All rights reserved.
+      © 2026 EasyTap. All rights reserved.
       </p>
 
       <p style="

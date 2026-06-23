@@ -10,13 +10,10 @@ const razorpay = new Razorpay({
     key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-// ── Fixed price map ───────────────────────────────────────────────────────────
-// Server-side source of truth for JioTap's own hardware lineup.
-// Keep these ids in sync with `initialProducts` in Products.jsx.
-// Prices are in INR (rupees) — converted to paise when creating the Razorpay order.
+
 const HARDWARE_PRODUCTS = {
     jiolight: {
-        name: "JioTap Light Card",
+        name: "EasyTap Light Card",
         price: 799,
         image: "/cards/jiolight/lightcard.png",
     },
@@ -26,22 +23,16 @@ const HARDWARE_PRODUCTS = {
         image: "/cards/jiotapprim/premiumcard.png",
     },
     jiotapgooglereview: {
-        name: "JioTap Google Review Card",
+        name: "EasyTap Google Review Card",
         price: 1299,
         image: "/cards/jiotapgooglereview/googlereviewcard1.png",
     },
 };
 
-// JioTap's own "seller" id, used to attribute these hardware orders in the
-// shared Order collection. Replace with the real JioTap admin/business user id.
 const JIOTAP_SELLER_ID = process.env.JIOTAP_SELLER_USER_ID || "000000000000000000000000";
 
 
-// ── CREATE RAZORPAY ORDER FOR HARDWARE PRODUCT ────────────────────────────────
-// POST /api/hardware-orders/razorpay
-// body: { productId, quantity, customerName, customerEmail, customerPhone }
-//
-// productId must be one of: "jiolight" | "jiotapprim" | "jiotapgooglereview"
+
 export const createHardwareRazorpayOrder = async (req, res) => {
     try {
         const {
@@ -128,11 +119,6 @@ export const createHardwareRazorpayOrder = async (req, res) => {
 };
 
 
-// ── VERIFY PAYMENT & SAVE ORDER ───────────────────────────────────────────────
-// POST /api/hardware-orders/verify
-// body: { razorpay_order_id, razorpay_payment_id, razorpay_signature }
-// Identical verification logic to orderController.verifyRazorpayPayment —
-// kept separate so this module has no dependency on the seller order flow.
 export const verifyHardwareRazorpayPayment = async (req, res) => {
     try {
         const {
