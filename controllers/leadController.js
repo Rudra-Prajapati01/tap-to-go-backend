@@ -27,6 +27,7 @@ export const createLead = async (req, res) => {
           },
         });
 
+        // ✅ Updated URL to easytap.co.in
         const profileUrl = `https://easytap.co.in/u/${ownerUser.uniqueId}`;
 
         // 1. OWNER EMAIL (Premium Modern UI Design)
@@ -95,7 +96,7 @@ export const createLead = async (req, res) => {
           `,
         });
 
-        // 2. LEAD SENDER EMAIL (Tapect Style Premium Template)
+        // 2. LEAD SENDER EMAIL (EasyTap Style Premium Template)
         if (lead.email) {
           await transporter.sendMail({
             from: process.env.EMAIL_USER,
